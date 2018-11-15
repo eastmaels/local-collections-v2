@@ -3,6 +3,13 @@ extends ../layout
 block content
   -data = data || {}
 
+  div(class="row")
+    div(class="col-12")
+      a(
+        class="btn btn-primary"
+        href='collections/new'
+        style="float: right"
+      ) Add Member Collection
   p
     label(for="month") Monthly Collection:
     input(
@@ -26,14 +33,10 @@ block content
           tbody
             each collection in data.collections
               tr.d-flex
-                td(class="col-3")
-                  collection.id
-                td(class="col-3")
-                  collection.givenBy
-                td(class="col-3")
-                  collection.forMonth
-                td(class="col-3")
-                  collection.amount
+                td(class="col-3")= collection.id
+                td(class="col-3")= collection.givenBy
+                td(class="col-3")= collection.forMonth
+                td(class="col-3")= collection.amount
 
   else
     p No collections for this month yet :(
