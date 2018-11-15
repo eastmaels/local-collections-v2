@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  -data = data || {}
+
+  if errors
+    ul.my-errors
+      for error in errors
+        li= error.msg
+
+  a(href="/locale_accounts") Back
+
+  form(action="./new" method="POST" class="form-registration")
+    label(for="name") Given By:
+    input(
+      type="text"
+      id="givenBy"
+      name="givenBy"
+      class="form-control"
+    )
+
+    label(for="forMonth") For Month:
+    input(
+      type="text"
+      name="forMonth"
+      class="form-control"
+    )
+
+    label(for="amount") Amount:
+    input(
+      type="text"
+      name="amount"
+      class="form-control"
+    )
+
+    input(
+      type="submit"
+      value="Submit"
+      class="btn btn-lg btn-primary btn-block"
+    )

@@ -140,4 +140,43 @@ router.get(
 );
 
 
+router.get(
+  '/:localeId/monthly_collections/:monthId/collections/new',
+  auth.connect(basic), 
+  (req, res) => {
+    const query = { name: req.params.localeId }
+    LocaleAccount.findOne({name : req.params.localeId})
+      .then((localeObj) => {
+        let targetCollection = localeObj.monthly_collections.id(req.params.monthId)
+        res.render('locale_accounts/new_collection', {
+          title: 'New Collection',
+          data: targetCollection,
+        });
+      })
+      .catch(() => { res.send('Sorry! Something went wrong.'); });
+  }
+);
+
+router.post(
+  '/:localeId/monthly_collections/:monthId/collections/new',
+  auth.connect(basic), 
+  (req, res) => {
+
+    console.log('req.body: ', req.body)
+
+    LocaleAccount.findOne({name : req.params.localeId})
+      .then((localeObj) => {
+        let targetCollection = localeObj.monthly_collections.id(req.params.monthId)
+        targetCollection.collections.push(req.body)
+
+        localeObj.save()
+      })
+      .then((localeObj) => {
+        let redirectUrl = `/locale_accounts/${req.params.localeId}/monthly_collections/${req.params.monthId}/edit`
+        res.redirect(redirectUrl);
+      })
+      .catch(() => { res.send('Sorry! Something went wrong.'); });
+  }
+);
+
 module.exports = router;
