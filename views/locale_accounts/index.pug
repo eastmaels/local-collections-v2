@@ -1,0 +1,92 @@
+extends ../layout
+
+block content
+  if message
+    div(
+      class="alert alert-warning alert-dismissible fade show"
+      role="alert"
+    )= message
+
+  if errors
+    ul.my-errors
+      for error in errors
+        li= error.msg
+
+  div(class="row")
+    div(class="col-12")
+      a(
+        class="btn btn-primary"
+        href="/locale_accounts/new"
+        style="float: right"
+      ) Add Locale
+  if locale_accounts.length
+
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">Are you sure you want to remove <strong><span class="locale">locale</span></strong> as an locale?</div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button type="button" class="btn btn-primary confirm">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      div(class="row")
+        div(class="col-12")
+          table.table.table-striped.table-hover
+            thead.thead-light
+              tr.d-flex
+                th(class="col-6") Name
+                th(class="col-6")
+            tbody
+              each locale in locale_accounts
+                tr.d-flex(
+                  id="row-" + locale.name
+                )
+                  td(class="col-6")
+                    a(href='locale_accounts/' + locale.name + '/edit')= locale.name
+                  td(class="col-6")
+                    a(
+                      class="btn btn-outline-primary"
+                      href='locale_accounts/' + locale.name + '/edit'
+                    )
+                      i(class="fas fa-pencil-alt")
+                    button(
+                      type="button"
+                      class="btn btn-outline-danger"
+                      data-toggle="modal"
+                      data-target="#deleteModal"
+                      data-locale=locale.name
+                    )
+                      i(class="fas fa-trash-alt")
+
+      script.
+        $('#deleteModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var locale = button.data('locale') // Extract info from data-* attributes
+          var modal = $(this)
+          modal.find('.modal-title').text('Remove ' + locale + ' as a locale?')
+          modal.find('.modal-body span').text(locale)
+          modal.find('.confirm').val(locale)
+        })
+
+        $('.confirm').on('click', e => {
+          const locale = e.target.value;
+          console.log('close modal', e.target.value);
+          $('#deleteModal').modal('hide');
+          $.post('locale_accounts/' + locale + '/delete', function() {
+            $("#row-" + locale).remove()
+          })
+        })
+
+  else
+    p No locale accounts yet :(
+

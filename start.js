@@ -4,17 +4,17 @@ const PORT = process.env.PORT || 3000
 
 // Environment Init
 if (!process.env.BASIC_AUTH_USERNAME || !process.env.BASIC_AUTH_PASSWORD 
-    || !process.env.DATABASE) throw new Error('ENV variable missing')
+    || !process.env.MONGODB_URI) throw new Error('ENV variable missing')
 
 let BASIC_AUTH_USERNAME = process.env.BASIC_AUTH_USERNAME
 let BASIC_AUTH_PASSWORD = process.env.BASIC_AUTH_PASSWORD
-let DATABASE = process.env.DATABASE
-if (BASIC_AUTH_USERNAME === '' || BASIC_AUTH_PASSWORD === '' || DATABASE === '' ) {
+let MONGODB_URI = process.env.MONGODB_URI
+if (BASIC_AUTH_USERNAME === '' || BASIC_AUTH_PASSWORD === '' || MONGODB_URI === '' ) {
   process.stderr.write('Check .env file\n')
   process.exit(1)
 }
 
-mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 mongoose.connection
   .on('connected', () => {
@@ -24,8 +24,7 @@ mongoose.connection
     console.log(`Connection error: ${err.message}`);
   });
 
-require('./models/Registration');
-require('./models/Overseer');
+require('./models/LocaleAccount');
 const app = require('./app');
 
 const server = app.listen(PORT, () => {

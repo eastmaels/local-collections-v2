@@ -1,22 +1,22 @@
 {
-  "name": "ulog-communities-web",
-  "version": "1.0.0",
-  "description": "Front-end for modifying ulog overseers",
+  "name": "locale-collections",
+  "version": "0.0.1",
+  "description": "For managing locale collections",
   "main": "index.js",
   "scripts": {
     "watch": "nodemon ./start.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eastmaels/ulog-communities-web.git"
+    "url": "git+https://github.com/eastmaels/locale-collections.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eastmaels/ulog-communities-web/issues"
+    "url": "https://github.com/eastmaels/locale-collections/issues"
   },
-  "homepage": "https://github.com/eastmaels/ulog-communities-web#readme",
+  "homepage": "https://github.com/eastmaels/locale-collections#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
     "dotenv": "^6.1.0",

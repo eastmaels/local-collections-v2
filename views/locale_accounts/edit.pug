@@ -8,7 +8,7 @@ block content
       for error in errors
         li= error.msg
 
-  a(href="/overseers") Back
+  a(href="/locale_accounts") Back
 
   form(action="./edit" method="POST" class="form-registration")
     label(for="name") Name:
@@ -19,22 +19,6 @@ block content
       class="form-control"
       value=data.name
       readonly=true
-    )
-
-    label(for="tags") Tags:
-    textarea(
-      id="tagsCsv"
-      name="tagsCsv"
-      class="form-control"
-    )= tagsCsv
-
-    label(for="maxweight") Max Vote Weight:
-    input(
-      type="text"
-      id="maxweight"
-      name="maxweight"
-      class="form-control"
-      value=data.maxweight
     )
 
     input(
