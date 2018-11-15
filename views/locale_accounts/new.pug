@@ -20,6 +20,18 @@ block content
       value=data.name
     )
 
+    label(for="month_collections") Monthly Collections:
+    input(
+      type="text"
+      name="monthly_collections[0][month]"
+      class="form-control monthly-collection"
+    )
+    input(
+      type="text"
+      name="monthly_collections[1][month]"
+      class="form-control monthly-collection"
+    )
+
     input(
       type="submit"
       value="Submit"

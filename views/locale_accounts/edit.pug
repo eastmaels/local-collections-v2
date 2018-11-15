@@ -21,6 +21,18 @@ block content
       readonly=true
     )
 
+    div(class="row")
+      div(class="col-12")
+        table.table.table-striped.table-hover
+          thead.thead-light
+            tr.d-flex
+              th(class="col-12") Month
+          tbody
+          each monthly_collection, index in data.monthly_collections
+            tr.d-flex
+              td(class="col-6")
+                a(href='monthly_collections/' + monthly_collection._id + '/edit')= monthly_collection.month
+
     input(
       type="submit"
       value="Submit"

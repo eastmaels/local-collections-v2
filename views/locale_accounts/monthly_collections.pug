@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+  -data = data || {}
+
+  p
+    label(for="month") Monthly Collection:
+    input(
+      type="text"
+      id="month"
+      name="month"
+      class="form-control"
+      value=data.month
+    )
+
+  if data.collections.length
+    div(class="row")
+      div(class="col-12")
+        table.table.table-striped.table-hover
+          thead.thead-light
+            tr.d-flex
+              th(class="col-3") Id
+              th(class="col-3") Given By
+              th(class="col-3") For Month
+              th(class="col-3") Amount
+          tbody
+            each collection in data.collections
+              tr.d-flex
+                td(class="col-3")
+                  collection.id
+                td(class="col-3")
+                  collection.givenBy
+                td(class="col-3")
+                  collection.forMonth
+                td(class="col-3")
+                  collection.amount
+
+  else
+    p No collections for this month yet :(
+
+
