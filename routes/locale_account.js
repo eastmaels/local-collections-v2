@@ -46,6 +46,7 @@ router.post(
   auth.connect(basic), 
   (req, res) => {
     const errors = validationResult(req);
+    console.log(req.body);
 
     if (errors.isEmpty()) {
       const locale = new LocaleAccount(req.body);
@@ -79,7 +80,7 @@ router.get(
 );
 
 router.post(
-  '/:localeId/edit/',
+  '/:localeId/edit',
   [
     body('name')
       .isLength({ min: 1 })
@@ -116,6 +117,23 @@ router.post(
     LocaleAccount.deleteOne(query)
       .then(() => {
         res.redirect('/locale_accounts');
+      })
+      .catch(() => { res.send('Sorry! Something went wrong.'); });
+  }
+);
+
+router.get(
+  '/:localeId/monthly_collections/:monthId/edit',
+  auth.connect(basic), 
+  (req, res) => {
+    const query = { name: req.params.localeId }
+    LocaleAccount.findOne({name : req.params.localeId})
+      .then((localeObj) => {
+        let targetCollection = localeObj.monthly_collections.id(req.params.monthId)
+        res.render('locale_accounts/monthly_collections', {
+          title: 'Edit LocaleAccount',
+          data: targetCollection,
+        });
       })
       .catch(() => { res.send('Sorry! Something went wrong.'); });
   }
