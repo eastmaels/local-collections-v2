@@ -2,6 +2,9 @@ extends ../layout
 
 block content
   -data = data || {}
+  -localeId = localeId || ''
+
+  a(href='/locale_accounts/' + localeId + '/edit') Back
 
   div(class="row")
     div(class="col-12")
@@ -9,7 +12,7 @@ block content
         class="btn btn-primary"
         href='collections/new'
         style="float: right"
-      ) Add Member Collection
+      ) Add Collection
   p
     label(for="month") Monthly Collection:
     input(
@@ -18,6 +21,7 @@ block content
       name="month"
       class="form-control"
       value=data.month
+      readonly=true
     )
 
   if data.collections.length
@@ -27,13 +31,11 @@ block content
           thead.thead-light
             tr.d-flex
               th(class="col-3") Given By
-              th(class="col-3") For Month
               th(class="col-3") Amount
           tbody
             each collection in data.collections
               tr.d-flex
                 td(class="col-3")= collection.givenBy
-                td(class="col-3")= collection.forMonth
                 td(class="col-3")= collection.amount
 
   else

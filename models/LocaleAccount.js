@@ -5,10 +5,6 @@ var memberCollectionSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  forMonth: {
-    type: String,
-    trim: true,
-  },
   amount: {
     type: String,
     trim: true,

@@ -52,11 +52,11 @@ block content
                   id="row-" + locale.name
                 )
                   td(class="col-6")
-                    a(href='/locale_accounts/' + locale.name + '/edit')= locale.name
+                    a(href='/locale_accounts/' + locale.id + '/edit')= locale.name
                   td(class="col-6")
                     a(
                       class="btn btn-outline-primary"
-                      href='/locale_accounts/' + locale.name + '/edit'
+                      href='/locale_accounts/' + locale.id + '/edit'
                     )
                       i(class="fas fa-pencil-alt")
                     button(

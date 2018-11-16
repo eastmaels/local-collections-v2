@@ -68,7 +68,7 @@ router.get(
   '/:localeId/edit/',
   auth.connect(basic),
   (req, res) => {
-    LocaleAccount.findOne({name : req.params.localeId})
+    LocaleAccount.findOne({_id : req.params.localeId})
       .then((localeObj) => {
         res.render('locale_accounts/edit', {
           title: 'Edit LocaleAccount',
@@ -91,8 +91,8 @@ router.post(
     const errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      const query = { name: req.body.name }
-      LocaleAccount.findOneAndUpdate(query, { name: req.body.name })
+      const query = { _id: req.param.localeId }
+      LocaleAccount.findOneAndUpdate(query, { _id: req.body.name })
         .then(() => { res.redirect('/locale_accounts'); })
         .catch(() => { res.send('Sorry! Something went wrong.'); });
     } else {
@@ -112,8 +112,7 @@ router.post(
   auth.connect(basic), 
   (req, res) => {
 
-    const query = { name: req.params.localeId }
-    console.log('query', query)
+    const query = { _id: req.params.localeId }
     LocaleAccount.deleteOne(query)
       .then(() => {
         res.redirect('/locale_accounts');
@@ -126,7 +125,7 @@ router.get(
   '/:localeId/monthly_collections/new',
   auth.connect(basic), 
   (req, res) => {
-    LocaleAccount.findOne({name : req.params.localeId})
+    LocaleAccount.findOne({_id : req.params.localeId})
       .then((localeObj) => {
         res.render('locale_accounts/monthly_collection_new', {
           title: 'New Monthly Collection',
@@ -138,11 +137,29 @@ router.get(
 );
 
 router.post(
+  '/:localeId/monthly_collections/:id/delete',
+  auth.connect(basic), 
+  (req, res) => {
+    LocaleAccount.findOne({_id : req.params.localeId})
+      .then((localeObj) => {
+        localeObj.monthly_collections.pull(req.params.id)
+        localeObj.save()
+      })
+      .then(() => {
+        let redirectUrl = `/locale_accounts/${req.params.localeId}/edit`
+        res.redirect(redirectUrl);
+      })
+      .catch(() => { res.send('Sorry! Something went wrong.'); });
+  }
+);
+
+
+router.post(
   '/:localeId/monthly_collections/new',
   auth.connect(basic), 
   (req, res) => {
 
-    LocaleAccount.findOne({name : req.params.localeId})
+    LocaleAccount.findOne({_id : req.params.localeId})
       .then((localeObj) => {
         localeObj.monthly_collections.push(req.body)
 
@@ -161,13 +178,13 @@ router.get(
   '/:localeId/monthly_collections/:monthId/edit',
   auth.connect(basic), 
   (req, res) => {
-    const query = { name: req.params.localeId }
-    LocaleAccount.findOne({name : req.params.localeId})
+    LocaleAccount.findOne({_id : req.params.localeId})
       .then((localeObj) => {
         let targetCollection = localeObj.monthly_collections.id(req.params.monthId)
         res.render('locale_accounts/monthly_collections', {
           title: 'Edit LocaleAccount',
           data: targetCollection,
+          localeId: req.params.localeId,
         });
       })
       .catch(() => { res.send('Sorry! Something went wrong.'); });
@@ -179,8 +196,7 @@ router.get(
   '/:localeId/monthly_collections/:monthId/collections/new',
   auth.connect(basic), 
   (req, res) => {
-    const query = { name: req.params.localeId }
-    LocaleAccount.findOne({name : req.params.localeId})
+    LocaleAccount.findOne({_id : req.params.localeId})
       .then((localeObj) => {
         let targetCollection = localeObj.monthly_collections.id(req.params.monthId)
         res.render('locale_accounts/new_collection', {
@@ -199,7 +215,7 @@ router.post(
 
     console.log('req.body: ', req.body)
 
-    LocaleAccount.findOne({name : req.params.localeId})
+    LocaleAccount.findOne({_id : req.params.localeId})
       .then((localeObj) => {
         let targetCollection = localeObj.monthly_collections.id(req.params.monthId)
         targetCollection.collections.push(req.body)
