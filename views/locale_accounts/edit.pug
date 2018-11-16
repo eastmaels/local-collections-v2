@@ -10,6 +10,43 @@ block content
 
   a(href="/locale_accounts") Back
 
+  div.modal.fade(
+    id="deleteModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  )
+    div(
+      class="modal-dialog"
+      role="document"
+    )
+      div.modal-content
+        div.modal-header
+          h5.modal-title(
+           id="exampleModalLabel"
+          )
+            Modal title
+          button.close(
+            type="button"
+            data-dismiss="modal"
+            aria-label="Close"
+          )
+            span(
+              aria-hidden="true"
+            ) &times;
+        div.modal-body
+          Are you sure you want to remove <strong><span>month</span></strong> as a collection month?
+        div.modal-footer
+          button.btn.btn-secondary(
+            type="button"
+            data-dismiss="modal"
+          ) No
+          button.btn.btn-primary.confirm(
+            type="button"
+            data-locale=data._id
+          ) Yes
+
   div(class="row")
     div(class="col-12")
       a(
@@ -18,98 +55,69 @@ block content
         style="float: right"
       ) Add Month
 
-  form(action="./edit" method="POST" class="form-registration")
-    label(for="name") Name:
-    input(
-      type="text"
-      id="name"
-      name="name"
-      class="form-control"
-      value=data.name
-      readonly=true
-    )
+  label(for="name") Name:
+  input(
+    type="text"
+    id="name"
+    name="name"
+    class="form-control"
+    value=data.name
+    readonly=true
+  )
 
-    div.modal.fade(
-      id="deleteModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    )
-      div.modal-dialog(
-        role="document"
-      )
-        div.modal-content
-          div.modal-header
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          div.modal-body
-            Are you sure you want to remove <strong><span>month</span></strong> as a collection month?
-          div.modal-footer
-            button.btn.btn-secondary(
-              type="button"
-              data-dismiss="modal"
-            ) No
-            button.btn.btn-primary.confirm(
-              type="button"
-              data-locale=data._id
-            ) Yes
+  div(class="row")
+    div(class="col-12")
+      table.table.table-striped.table-hover
+        thead.thead-light
+          tr.d-flex
+            th(class="col-6") Month
+            th(class="col-6") Action
+        tbody
+        each monthly_collection, index in data.monthly_collections
+          tr.d-flex(
+            id="row-" + monthly_collection._id
+          )
+            td(class="col-6")
+              a(href='monthly_collections/' + monthly_collection._id + '/edit')= monthly_collection.month
+            td(class="col-6")
+              a(
+                class="btn btn-outline-primary"
+                href='monthly_collections/' + monthly_collection._id + '/edit'
+              )
+                i(class="fas fa-pencil-alt")
+              button(
+                type="button"
+                class="btn btn-outline-danger"
+                data-toggle="modal"
+                data-target="#deleteModal"
+                data-id=monthly_collection._id
+                data-month=monthly_collection.month
+                data-locale=data._id
+              )
+                i(class="fas fa-trash-alt")
 
-    div(class="row")
-      div(class="col-12")
-        table.table.table-striped.table-hover
-          thead.thead-light
-            tr.d-flex
-              th(class="col-6") Month
-              th(class="col-6") Action
-          tbody
-          each monthly_collection, index in data.monthly_collections
-            tr.d-flex(
-              id="row-" + monthly_collection._id
-            )
-              td(class="col-6")
-                a(href='monthly_collections/' + monthly_collection._id + '/edit')= monthly_collection.month
-              td(class="col-6")
-                a(
-                  class="btn btn-outline-primary"
-                  href='monthly_collections/' + monthly_collection._id + '/edit'
-                )
-                  i(class="fas fa-pencil-alt")
-                button(
-                  type="button"
-                  class="btn btn-outline-danger"
-                  data-toggle="modal"
-                  data-target="#deleteModal"
-                  data-id=monthly_collection._id
-                  data-month=monthly_collection.month
-                  data-locale=data._id
-                )
-                  i(class="fas fa-trash-alt")
+    script.
+      $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var id = button.data('id')
+        var month = button.data('month')
+        var localeId = button.data('locale')
 
-      script.
-        $('#deleteModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget) // Button that triggered the modal
-          var id = button.data('id')
-          var month = button.data('month')
-          var localeId = button.data('locale')
+        var modal = $(this)
+        modal.find('.modal-title').text('Remove collection month?')
+        modal.find('.modal-body span').text(month)
+        modal.find('.confirm').val(id)
+        modal.find('.confirm').data('localeId', localeId)
 
-          var modal = $(this)
-          modal.find('.modal-title').text('Remove collection month?')
-          modal.find('.modal-body span').text(month)
-          modal.find('.confirm').val(id)
-          modal.find('.confirm').data('localeId', localeId)
+      })
 
+      $('.confirm').on('click', e => {
+        const id = e.target.value;
+        const target = $(e.target)
+        var localeId = target.data('locale')
+
+        $('#deleteModal').modal('hide');
+        $.post('/locale_accounts/' + localeId + '/monthly_collections/' + id + '/delete', function() {
+          $("#row-" + id).remove()
         })
-
-        $('.confirm').on('click', e => {
-          const id = e.target.value;
-          const target = $(e.target)
-          var localeId = target.data('locale')
-
-          $('#deleteModal').modal('hide');
-          $.post('/locale_accounts/' + localeId + '/monthly_collections/' + id + '/delete', function() {
-            $("#row-" + id).remove()
-          })
-        })
+      })
