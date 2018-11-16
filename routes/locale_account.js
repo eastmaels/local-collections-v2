@@ -123,6 +123,41 @@ router.post(
 );
 
 router.get(
+  '/:localeId/monthly_collections/new',
+  auth.connect(basic), 
+  (req, res) => {
+    LocaleAccount.findOne({name : req.params.localeId})
+      .then((localeObj) => {
+        res.render('locale_accounts/monthly_collection_new', {
+          title: 'New Monthly Collection',
+          data: localeObj,
+        });
+      })
+      .catch(() => { res.send('Sorry! Something went wrong.'); });
+  }
+);
+
+router.post(
+  '/:localeId/monthly_collections/new',
+  auth.connect(basic), 
+  (req, res) => {
+
+    LocaleAccount.findOne({name : req.params.localeId})
+      .then((localeObj) => {
+        localeObj.monthly_collections.push(req.body)
+
+        localeObj.save()
+      })
+      .then((localeObj) => {
+        let redirectUrl = `/locale_accounts/${req.params.localeId}/edit`
+        res.redirect(redirectUrl);
+      })
+      .catch(() => { res.send('Sorry! Something went wrong.'); });
+
+  }
+);
+
+router.get(
   '/:localeId/monthly_collections/:monthId/edit',
   auth.connect(basic), 
   (req, res) => {

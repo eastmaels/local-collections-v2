@@ -10,6 +10,14 @@ block content
 
   a(href="/locale_accounts") Back
 
+  div(class="row")
+    div(class="col-12")
+      a(
+        class="btn btn-primary"
+        href='/locale_accounts/' + data.name + '/monthly_collections/new'
+        style="float: right"
+      ) Add Month
+
   form(action="./edit" method="POST" class="form-registration")
     label(for="name") Name:
     input(

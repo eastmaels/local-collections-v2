@@ -52,11 +52,11 @@ block content
                   id="row-" + locale.name
                 )
                   td(class="col-6")
-                    a(href='locale_accounts/' + locale.name + '/edit')= locale.name
+                    a(href='/locale_accounts/' + locale.name + '/edit')= locale.name
                   td(class="col-6")
                     a(
                       class="btn btn-outline-primary"
-                      href='locale_accounts/' + locale.name + '/edit'
+                      href='/locale_accounts/' + locale.name + '/edit'
                     )
                       i(class="fas fa-pencil-alt")
                     button(
@@ -82,7 +82,7 @@ block content
           const locale = e.target.value;
           console.log('close modal', e.target.value);
           $('#deleteModal').modal('hide');
-          $.post('locale_accounts/' + locale + '/delete', function() {
+          $.post('/locale_accounts/' + locale + '/delete', function() {
             $("#row-" + locale).remove()
           })
         })
